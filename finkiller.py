@@ -1,5 +1,5 @@
-import database as db
 import pandas as pd
+import impexp as ie
 
 
 #TODO: Maybe dictionary instead of class
@@ -20,25 +20,19 @@ class Expense:
 
 def main():
     print("Finkiller starting...")
-    print("Creating db handler")
-    database = db.Database()
-    database.open_db('db.sq3')
-    database.create_tables()
-    database.insert_expense("name1", "product1", "category1", 2.32)
-    y = database.get_expenses()
-    df = pd.DataFrame(y)
-    # TODO: Drop while loading, maybe load directly from sql?
-    df.drop(columns=df.columns[0], axis=1, inplace=True)
-    df.columns = ['rowid', 'name', 'product', 'price']
-    sum = df['price'].sum()
-    print(df.describe())
-    print(f'Total expense = {sum}')
-    database.close_db()
 
-    # exp = Expense()
-    # exp.set_expense(['raz', 'jeden'])
-    # print(exp.get_expense())
-    
+    exp = ie.Exporter("adam")
+    exp.export_expense('1', 'name1', 'product1', 'cat12', 2.12)
+    print(exp.import_expenses())
+
+    # df = pd.DataFrame(y)
+    # # TODO: Drop while loading, maybe load directly from sql?
+    # df.drop(columns=df.columns[0], axis=1, inplace=True)
+    # df.columns = ['rowid', 'name', 'product', 'price']
+    # sum = df['price'].sum()
+    # print(df.describe())
+    # print(f'Total expense = {sum}')
+
 
 if __name__ == "__main__":
     main()
