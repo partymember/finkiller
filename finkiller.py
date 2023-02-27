@@ -1,5 +1,7 @@
 import pandas as pd
 import impexp as ie
+import datetime
+import random
 
 
 #TODO: Maybe dictionary instead of class
@@ -22,16 +24,24 @@ def main():
     print("Finkiller starting...")
 
     exp = ie.Exporter("adam")
-    exp.export_expense('1', 'name1', 'product1', 'cat12', 2.12)
-    print(exp.import_expenses())
+    for x in range(10):
+        y = random.randint(-10, 10)
+        diff = datetime.timedelta(days=1)*y
+        date = datetime.date.today()
+        date = date + diff
+        exp.export_expense(date, 'name1', 'product1', f'cat{x}', 2.12)
 
-    # df = pd.DataFrame(y)
-    # # TODO: Drop while loading, maybe load directly from sql?
-    # df.drop(columns=df.columns[0], axis=1, inplace=True)
-    # df.columns = ['rowid', 'name', 'product', 'price']
-    # sum = df['price'].sum()
-    # print(df.describe())
-    # print(f'Total expense = {sum}')
+    date1 = datetime.date(year=2023, month=2, day=26)
+    date2 = datetime.date(year=2023, month=2, day=28)
+    data_to_analyze = (exp.import_expenses(date2, date2))
+
+    df = pd.DataFrame(data_to_analyze)
+    # TODO: Drop while loading, maybe load directly from sql?
+    df.drop(columns=df.columns[0], axis=1, inplace=True)
+    df.columns = ['date', 'name', 'product', 'cat', 'price']
+    total_price = df['price'].sum()
+    print(df.describe())
+    print(f'Total expense = {total_price}')
 
 
 if __name__ == "__main__":

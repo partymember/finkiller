@@ -1,10 +1,12 @@
+import datetime
+
 import database
 
 INCOMES_TABLE = 'INCOMES'
 EXPENSES_TABLE = 'EXPENSES'
 
-incomes_columns = {'date': str, 'name': str, 'source': str, 'category': str, 'quote': float}
-expenses_columns = {'date': str, 'name': str, 'product': str, 'category': str, 'quote': float}
+incomes_columns = {'date': datetime.date, 'name': str, 'source': str, 'category': str, 'quote': float}
+expenses_columns = {'date': datetime.date, 'name': str, 'product': str, 'category': str, 'quote': float}
 
 
 class Exporter:
@@ -32,6 +34,7 @@ class Exporter:
         data = (date, name, pr, cat, qu)
         self._db_handle.insert(incomes_columns, INCOMES_TABLE, data)
 
-    def import_expenses(self):
-        x = self._db_handle.query(INCOMES_TABLE)
+    def import_expenses(self, from_date, to_date):
+        assert from_date <= to_date
+        x = self._db_handle.query(INCOMES_TABLE, from_date, to_date)
         return x

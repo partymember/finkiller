@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 
 
@@ -14,6 +15,8 @@ class Database:
             return "TEXT"
         if x == float:
             return "REAL"
+        if x == datetime.date:
+            return "TIMESTAMP"
 
     def open_db(self, path):
         self._connection = sqlite3.connect(path)
@@ -52,8 +55,9 @@ class Database:
         print("inserted")
 
     # TODO: Add data range, limit
-    def query(self, table):
-        cmd = f'SELECT rowid, * from {table};'
+    def query(self, table, from_date, to_date):
+        cmd = f'SELECT rowid, * from {table} where date between "{from_date}" and "{to_date}";'
+        print(cmd)
         cursor = self._connection.execute(cmd)
         x = []
         for row in cursor:
